@@ -39,6 +39,8 @@ function fu_settings(): array {
         'imap_user'    => '',
         'imap_pass'    => '',
         'imap_folder'  => 'INBOX',
+        'wa_enabled'   => '1',
+        'wa_number'    => '385915938100',
         'forms'        => [],
     ]);
 }
@@ -720,6 +722,8 @@ add_action('admin_init', function () {
             'imap_user'   => sanitize_text_field($_POST['imap_user'] ?? ''),
             'imap_pass'   => sanitize_text_field($_POST['imap_pass'] ?? ''),
             'imap_folder' => sanitize_text_field($_POST['imap_folder'] ?? 'INBOX'),
+            'wa_enabled'  => isset($_POST['wa_enabled']) ? '1' : '0',
+            'wa_number'   => preg_replace('/\D/', '', $_POST['wa_number'] ?? ''),
             'forms'       => [],
         ];
 
@@ -993,6 +997,16 @@ function fu_settings_page() {
         </p>
     </div>';
 
+    echo '<div class="fu-settings-section"><h2>WhatsApp gumb</h2>
+        <table class="form-table">
+            <tr><th>Prikaži gumb</th>
+                <td><label><input type="checkbox" name="wa_enabled" value="1" ' . checked($s['wa_enabled'], '1', false) . '> Prikaži WhatsApp floating gumb na stranici</label></td></tr>
+            <tr><th>Broj telefona</th>
+                <td><input type="text" name="wa_number" value="' . esc_attr($s['wa_number']) . '" class="regular-text" placeholder="385915938100">
+                    <p class="description">Unesi broj s pozivnim brojem, bez + i razmaka. Npr. <code>385915938100</code></p></td></tr>
+        </table>
+    </div>';
+
     echo '<div class="fu-settings-section"><h2>Predlošci emailova po formi</h2>
         <p class="description" style="margin-bottom:14px;">Placeholderi: <code>{ime}</code> <code>{email}</code> <code>{podaci}</code> <code>{datum}</code> <code>{naziv_forme}</code></p>';
 
@@ -1078,7 +1092,12 @@ function fu_style(): string {
 /* ═══════════════════════════════════════════════
    WHATSAPP FLOATING BUTTON
 ═══════════════════════════════════════════════ */
-add_action('wp_footer', function () { ?>
+add_action('wp_footer', function () {
+    $s = fu_settings();
+    if (empty($s['wa_enabled']) || empty($s['wa_number'])) return;
+    $number = preg_replace('/\D/', '', $s['wa_number']);
+    $url    = 'https://wa.me/' . esc_attr($number);
+    ?>
 <style>
   .fu-wa-float{
     position:fixed!important;
@@ -1102,7 +1121,7 @@ add_action('wp_footer', function () { ?>
   .fu-wa-float:hover{box-shadow:0 6px 28px rgba(37,211,102,.6)!important}
   .fu-wa-float:hover svg{transform:scale(1.1)}
 </style>
-<a href="https://wa.me/385915938100" target="_blank" rel="noopener noreferrer"
+<a href="<?php echo $url; ?>" target="_blank" rel="noopener noreferrer"
    class="fu-wa-float"
    aria-label="Kontaktiraj nas na WhatsAppu">
   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true" focusable="false">

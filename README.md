@@ -13,7 +13,7 @@ Custom WordPress plugin za [flotila.hr](https://flotila.hr). Logira WPForms prij
 - **Lifetime counter** - ukupan broj primljenih upita koji se ne briše ni kad se upiti obrišu
 - **SEO fixes** - meta naslov, opis i OpenGraph tagovi za početnu stranicu putem Rank Math filtera
 - **Mobile fixes** - CSS/JS fix za bijeli razmak između headera i hero sekcije na mobitelu
-- **WhatsApp gumb** - floating WhatsApp gumb u footeru
+- **WhatsApp floating gumb** - prikazuje se na svim stranicama, broj i vidljivost se mogu mijenjati u postavkama
 - **Android scroll fix** - popravak za blokiran scroll na Androidu kad je modalni popup otvoren
 
 ---
